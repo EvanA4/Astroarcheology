@@ -3,8 +3,8 @@ import csv
 from bs4 import BeautifulSoup
 from playwright.sync_api import sync_playwright
 
-START_URL = "https://bdaydata.com/professions"
-OUTPUT_FILE = "professions.csv"
+START_URL = "https://en.wikipedia.org/wiki/Lists_of_people_by_occupation"
+OUTPUT_FILE = "wikiprofessions.csv"
 
 
 def get_professions(page):
