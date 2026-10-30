@@ -15,18 +15,18 @@ def analyze(csv_path: str):
 
     # read CSV and compute actual zodiac signs
     df = pd.read_csv(csv_path)
-    birthdays = df["Birthday"].tolist()
+    birthdays = df["birthdate"].tolist()
     actual_zodiacs = [zodiac_sign(datetime.fromisoformat(birthday)) for birthday in birthdays]
-    df["ActualZodiac"] = actual_zodiacs
+    df["zodiac"] = actual_zodiacs
     df.to_csv(os.path.join("output", "people.csv"), index=False)
 
     # categorize into professions
-    df_cols = ["Profession"] + list(ZODIAC_SIGNS)
+    df_cols = ["profession"] + list(ZODIAC_SIGNS)
     professions_df = pd.DataFrame(columns=df_cols)
-    professions = df["Profession"].unique().tolist()
+    professions = df["profession"].unique().tolist()
     for profession in professions:
-        tmp_df = df[df["Profession"] == profession]
-        sign_counts = tmp_df["ActualZodiac"].value_counts().to_dict()
+        tmp_df = df[df["profession"] == profession]
+        sign_counts = tmp_df["zodiac"].value_counts().to_dict()
         row_data = [profession] + [sign_counts[sign] if sign in sign_counts else 0 for sign in ZODIAC_SIGNS]
         professions_df.loc[len(professions_df)] = row_data
     professions_df.to_csv(os.path.join("output", "professions.csv"), index=False)
