@@ -16,9 +16,15 @@ ZODIAC_SIGNS = (
 EPHEMERIS = "de440"
 
 
+__previous = None
+
+
 def zodiac_sign(dt: datetime) -> str:
+    global __previous
     if dt.tzinfo is None:
         dt = dt.replace(tzinfo=timezone.utc)
+    if __previous is not None and dt == __previous[0]:
+        return __previous[1]
 
     t = Time(dt)
     ecliptic_frame = GeocentricTrueEcliptic(equinox=t, obstime=t)
@@ -29,7 +35,9 @@ def zodiac_sign(dt: datetime) -> str:
         sun_ecliptic = sun.transform_to(ecliptic_frame)
 
     longitude = sun_ecliptic.lon.deg % 360
-    return ZODIAC_SIGNS[int(longitude // 30)]
+    output = ZODIAC_SIGNS[int(longitude // 30)]
+    __previous = (dt, output)
+    return output
 
 
 if __name__ == "__main__":
